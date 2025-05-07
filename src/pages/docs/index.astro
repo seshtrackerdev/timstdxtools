@@ -1,0 +1,72 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+
+const docs = (await getCollection('docs')).sort(
+	(a, b) => a.data.title.localeCompare(b.data.title)
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				max-width: 900px;
+				margin: 0 auto;
+				padding: 2rem 1rem;
+			}
+			.docs-list {
+				display: flex;
+				flex-direction: column;
+				gap: 1.5rem;
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			.docs-list li {
+				background: var(--card-bg);
+				border-radius: var(--card-radius);
+				box-shadow: var(--card-shadow);
+				padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+				transition: box-shadow var(--speed-normal) var(--ease-out), transform var(--speed-normal) var(--ease-out);
+			}
+			.docs-list li:hover {
+				box-shadow: var(--card-hover);
+				transform: translateY(-4px) scale(1.02);
+			}
+			.docs-list a {
+				color: var(--fg-primary);
+				text-decoration: none;
+				font-size: 1.2rem;
+				font-weight: 600;
+				letter-spacing: -0.01em;
+				display: block;
+			}
+			.docs-list .desc {
+				color: var(--fg-secondary);
+				font-size: 1rem;
+				margin-top: 0.25rem;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1 style="font-size:2.2rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:1.5rem; color: var(--fg-primary);">📚 Documentation</h1>
+			<ul class="docs-list">
+				{docs.map((doc) => (
+					<li>
+						<a href={`/docs/${doc.id}/`}>{doc.data.title}</a>
+						{doc.data.description && <div class="desc">{doc.data.description}</div>}
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

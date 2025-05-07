@@ -9,41 +9,164 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			:root {
+				--icon-size: 3.5rem;
+				--transition: 0.22s cubic-bezier(.4,0,.2,1);
+			}
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+				background: var(--gradient-bg);
+				font-family: 'Inter', system-ui, sans-serif;
+			}
+			main {
+				flex: 1;
+				width: 100%;
+				padding: 1.5rem 2vw;
+				box-sizing: border-box;
+			}
+			.app-section {
+				background: var(--bg-surface);
+				border-radius: var(--card-radius);
+				box-shadow: var(--card-shadow);
+				padding: 2.5rem 2rem 2rem 2rem;
+				margin-bottom: 2rem;
+				width: 100%;
+				box-sizing: border-box;
+				animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1);
+			}
+			.section-title {
+				font-size: 1.45rem;
+				font-weight: 800;
+				margin-bottom: 2.2rem;
+				color: var(--fg-primary);
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				letter-spacing: -0.01em;
+			}
+			.launchpad-grid {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-evenly;
+				align-items: stretch;
+				gap: 2.5rem;
+				flex-wrap: nowrap;
+				width: 100%;
+				overflow-x: auto;
+				padding-bottom: 1rem;
+			}
+			.app-card {
+				background: var(--card-bg);
+				border-radius: var(--card-radius);
+				box-shadow: var(--card-shadow);
+				border: 1.5px solid var(--neutral-600);
+				padding: 2.5rem 1.5rem 2rem 1.5rem;
+				text-align: center;
+				transition: box-shadow var(--transition), transform var(--transition), border var(--transition);
+				cursor: pointer;
+				border: none;
+				text-decoration: none;
+				color: var(--fg-primary);
+				position: relative;
+				overflow: hidden;
+				flex: 1 1 0;
+				min-width: 220px;
+				max-width: 400px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				opacity: 0;
+				transform: translateY(30px);
+				animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1) forwards;
+				animation-delay: 0.2s;
+			}
+			.app-card:nth-child(2) { animation-delay: 0.35s; }
+			.app-card:nth-child(3) { animation-delay: 0.5s; }
+			.app-card:hover, .app-card:focus {
+				box-shadow: var(--card-hover);
+				transform: translateY(-8px) scale(1.035);
+				border: 1.5px solid var(--primary-accent);
+				z-index: 2;
+			}
+			.app-icon {
+				font-size: var(--icon-size);
+				margin-bottom: 1.5rem;
+				display: block;
+				transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+			}
+			.app-card:hover .app-icon, .app-card:focus .app-icon {
+				transform: scale(1.18) rotate(-8deg);
+			}
+			.app-title {
+				font-size: 1.25rem;
+				font-weight: 700;
+				margin-bottom: 0.6rem;
+				letter-spacing: -0.01em;
+				color: var(--fg-primary);
+			}
+			.app-desc {
+				font-size: 1.05rem;
+				color: var(--fg-secondary);
+				margin-bottom: 0;
+				font-weight: 400;
+				letter-spacing: 0.01em;
+			}
+			@keyframes fadeInUp {
+				0% { opacity: 0; transform: translateY(30px); }
+				100% { opacity: 1; transform: translateY(0); }
+			}
+			.tdx-logo {
+				display: inline-block;
+				max-width: 2.2rem;
+				max-height: 2.2rem;
+				width: auto;
+				height: auto;
+				object-fit: contain;
+				vertical-align: middle;
+				margin-right: 0.6rem;
+				border-radius: 0.5rem;
+				box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
+			<h1 style="font-size:2.5rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:0.5rem; color: var(--fg-primary);">
+				🚀 App Launchpad
+			</h1>
+			<p style="font-size:1.15rem; color: var(--fg-secondary); margin-bottom:2rem;">
+				Welcome! Choose an app to launch:
 			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+
+			<div class="app-section">
+				<h2 class="section-title"><img src="/teamdynamix_1714148946762.png" alt="TeamDynamix Logo" class="tdx-logo" /> TeamDynamix Apps</h2>
+				<div class="launchpad-grid">
+					<a href="/discovery-companion" class="app-card" tabindex="0">
+						<span class="app-icon" aria-hidden="true">🧭</span>
+						<div class="app-title">Discovery Companion</div>
+						<div class="app-desc">Your guide to exploring new features and content.</div>
+					</a>
+					<a href="/demo-toolbox" class="app-card" tabindex="0">
+						<span class="app-icon" aria-hidden="true">🧰</span>
+						<div class="app-title">Demo Toolbox</div>
+						<div class="app-desc">Access a suite of demo tools and utilities.</div>
+					</a>
+					<a href="/docs" class="app-card" tabindex="0">
+						<span class="app-icon" aria-hidden="true">📚</span>
+						<div class="app-title">TDX Docs</div>
+						<div class="app-desc">Browse documentation, guides, and resources.</div>
+					</a>
+				</div>
+			</div>
 		</main>
 		<Footer />
 	</body>

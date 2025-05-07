@@ -1,0 +1,232 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { getCollection } from 'astro:content';
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const docs = await getCollection('docs');
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const docIndex = docs.findIndex((doc) => `/docs/${doc.id}` === currentPath);
+const prevDoc = docIndex > 0 ? docs[docIndex - 1] : null;
+const nextDoc = docIndex < docs.length - 1 ? docs[docIndex + 1] : null;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			.docs-layout {
+				display: flex;
+				gap: 0;
+				min-height: 100vh;
+				background: var(--bg-primary);
+			}
+			.sidebar {
+				width: 260px;
+				background: var(--bg-surface);
+				border-right: 1px solid var(--neutral-600);
+				padding: 2rem 1rem 2rem 2rem;
+				box-sizing: border-box;
+				position: sticky;
+				top: 0;
+				height: 100vh;
+				overflow-y: auto;
+				z-index: 1;
+			}
+			.sidebar h2 {
+				font-size: 1.1rem;
+				font-weight: 700;
+				margin-bottom: 1.5rem;
+				color: var(--fg-primary);
+				letter-spacing: 0.01em;
+			}
+			.sidebar input[type="search"] {
+				width: 100%;
+				padding: 0.5rem 0.75rem;
+				margin-bottom: 1.2rem;
+				border-radius: var(--radius-md);
+				border: 1px solid var(--neutral-600);
+				background: var(--bg-primary);
+				color: var(--fg-primary);
+				font-size: 1rem;
+			}
+			.sidebar ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+			.sidebar a {
+				color: var(--fg-primary);
+				text-decoration: none;
+				padding: 0.5rem 1rem;
+				border-radius: var(--radius-md);
+				font-size: 1rem;
+				transition: background var(--speed-normal) var(--ease-out), color var(--speed-normal) var(--ease-out);
+			}
+			.sidebar a.active {
+				background: var(--primary-accent);
+				color: #fff;
+				font-weight: 700;
+			}
+			.sidebar a:hover {
+				background: var(--neutral-600);
+				color: var(--primary-accent);
+			}
+			.docs-main {
+				flex: 1;
+				padding: 2.5rem 2rem 2rem 2rem;
+				max-width: 900px;
+				margin: 0 auto;
+			}
+			.back-link {
+				display: inline-block;
+				margin-bottom: 1.5rem;
+				color: var(--secondary-accent);
+				text-decoration: none;
+				font-size: 1rem;
+				transition: color var(--speed-normal) var(--ease-out);
+			}
+			.back-link:hover {
+				color: var(--primary-accent);
+			}
+			.doc-nav {
+				display: flex;
+				justify-content: space-between;
+				margin-top: 2.5rem;
+				gap: 1rem;
+			}
+			.doc-nav a {
+				color: var(--secondary-accent);
+				text-decoration: none;
+				font-size: 1rem;
+				padding: 0.5rem 1rem;
+				border-radius: var(--radius-md);
+				background: var(--bg-surface);
+				box-shadow: var(--shadow-sm);
+				transition: background var(--speed-normal) var(--ease-out), color var(--speed-normal) var(--ease-out);
+			}
+			.doc-nav a:hover {
+				background: var(--primary-accent);
+				color: #fff;
+			}
+			@media (max-width: 900px) {
+				.docs-layout {
+					flex-direction: column;
+				}
+				.sidebar {
+					width: 100%;
+					border-right: none;
+					border-bottom: 1px solid var(--neutral-600);
+					padding: 1rem;
+					height: auto;
+					position: static;
+				}
+				.docs-main {
+					padding: 1.5rem 0.5rem;
+					max-width: 100%;
+				}
+			}
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			.title {
+				margin-bottom: 1em;
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+			}
+			.last-updated-on {
+				font-style: italic;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<div class="docs-layout">
+			<nav class="sidebar">
+				<h2>Docs Navigation</h2>
+				<input type="search" placeholder="Filter docs..." oninput="filterDocs(event)">
+				<ul id="docs-list">
+					{docs.sort((a, b) => a.data.title.localeCompare(b.data.title)).map((doc) => {
+						const docPath = `/docs/${doc.id}`;
+						return (
+							<li>
+								<a href={docPath} class:list={{ active: currentPath === docPath }}>{doc.data.title}</a>
+							</li>
+						);
+					})}
+				</ul>
+				<script is:inline>
+					function filterDocs(e) {
+						const val = e.target.value.toLowerCase();
+						const items = document.querySelectorAll('#docs-list li');
+						items.forEach(li => {
+							const text = li.textContent.toLowerCase();
+							li.style.display = text.includes(val) ? '' : 'none';
+						});
+					}
+				</script>
+			</nav>
+			<main class="docs-main">
+				<a href="/docs" class="back-link">← Back to Docs</a>
+				<article>
+					<div class="hero-image">
+						{heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
+					</div>
+					<div class="prose">
+						<div class="title">
+							<div class="date">
+								<FormattedDate date={pubDate} />
+								{updatedDate && (
+									<div class="last-updated-on">
+										Last updated on <FormattedDate date={updatedDate} />
+									</div>
+								)}
+							</div>
+							<h1>{title}</h1>
+							<hr />
+						</div>
+						<slot />
+					</div>
+					<div class="doc-nav">
+						{prevDoc && <a href={`/docs/${prevDoc.id}`}>← {prevDoc.data.title}</a>}
+						{nextDoc && <a href={`/docs/${nextDoc.id}`}>{nextDoc.data.title} →</a>}
+					</div>
+				</article>
+			</main>
+		</div>
+		<Footer />
+	</body>
+</html>

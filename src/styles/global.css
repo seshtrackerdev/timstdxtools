@@ -5,17 +5,108 @@
  */
 
 :root {
-  --accent: #2337ff;
-  --accent-dark: #000d8a;
-  --black: 15, 18, 25;
-  --gray: 96, 115, 159;
-  --gray-light: 229, 233, 240;
-  --gray-dark: 34, 41, 57;
-  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
-  --box-shadow:
-    0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-    0 16px 32px rgba(var(--gray), 33%);
+  /* Base Colors */
+  --bg-primary: #1B1F36;    /* Midnight Navy */
+  --bg-surface: #242933;    /* Surface Navy */
+  --neutral-600: #373D48;   /* Divider */
+  --fg-primary: #E8E9EB;    /* Text */
+  --fg-secondary: #A9AEBB;  /* Muted Text */
+  
+  /* Accent Colors */
+  --primary-accent: #FF6A3D;   /* Signal Orange */
+  --secondary-accent: #4990E2; /* Azure Edge */
+  --highlight: #00EAC7;        /* Pulse Mint */
+  --danger: #D7263D;           /* Lava */
+
+  /* Card Styles */
+  --card-bg: var(--bg-surface);
+  --card-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
+  --card-hover: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --card-radius: 18px;
+
+  /* Gradients */
+  --gradient-core: linear-gradient(135deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+  --gradient-bg: linear-gradient(120deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
+  
+  /* Spacing Scale (base: 4px) */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.2);
+  
+  /* Animation */
+  --speed-fast: 150ms;
+  --speed-normal: 200ms;
+  --speed-slow: 300ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  
+  /* Layout */
+  --container-max: 960px;
+  --header-height: 72px;
+  
+  /* Z-index Scale */
+  --z-header: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+
+  /* Documentation Styles */
+  --docs-sidebar-width: 250px;
+  --docs-content-max-width: 900px;
 }
+
+/* Light Mode Overrides */
+[data-theme="light"] {
+  --bg-primary: #F4F6F8;    /* Cloud Gray */
+  --bg-surface: #FFFFFF;    /* White */
+  --neutral-600: #E2E8F0;   /* Light Divider */
+  --fg-primary: #222222;    /* Dark Text */
+  --fg-secondary: #4B5563;  /* Muted Dark */
+  --card-bg: #FFFFFF;
+  --card-shadow: 0 4px 24px 0 rgba(60, 60, 60, 0.08);
+  --card-hover: 0 8px 32px 0 rgba(60, 60, 60, 0.16);
+  --gradient-bg: linear-gradient(120deg, #f0f4ff 0%, #fdf6f8 100%);
+}
+
+/* Remove duplicate light mode selector */
+/* html[data-theme="light"] { ... } */
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --bg-primary: #1B1F36;
+  --bg-surface: #242933;
+  --neutral-600: #373D48;
+  --fg-primary: #E8E9EB;
+  --fg-secondary: #A9AEBB;
+  --card-bg: #242933;
+  --card-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.2);
+  --card-hover: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --gradient-bg: linear-gradient(120deg, #1B1F36 0%, #242933 100%);
+}
+
+/* Base transitions for theme switching */
+body, main, header, .app-card, nav, .header-actions {
+  transition: background-color var(--speed-normal) var(--ease-out),
+              color var(--speed-normal) var(--ease-out),
+              box-shadow var(--speed-normal) var(--ease-out);
+}
+
 @font-face {
   font-family: "Atkinson";
   src: url("/fonts/atkinson-regular.woff") format("woff");
@@ -35,11 +126,10 @@ body {
   margin: 0;
   padding: 0;
   text-align: left;
-  background: linear-gradient(var(--gray-gradient)) no-repeat;
-  background-size: 100% 600px;
+  background: var(--bg-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  color: rgb(var(--gray-dark));
+  color: var(--fg-primary);
   font-size: 20px;
   line-height: 1.7;
 }
@@ -56,7 +146,7 @@ h4,
 h5,
 h6 {
   margin: 0 0 0.5rem 0;
-  color: rgb(var(--black));
+  color: var(--fg-primary);
   line-height: 1.2;
 }
 h1 {
@@ -79,10 +169,10 @@ b {
   font-weight: 700;
 }
 a {
-  color: var(--accent);
+  color: var(--secondary-accent);
 }
 a:hover {
-  color: var(--accent);
+  color: var(--primary-accent);
 }
 p {
   margin-bottom: 1em;
@@ -107,7 +197,7 @@ img {
 }
 code {
   padding: 2px 5px;
-  background-color: rgb(var(--gray-light));
+  background-color: var(--bg-surface);
   border-radius: 2px;
 }
 pre {
@@ -118,14 +208,14 @@ pre > code {
   all: unset;
 }
 blockquote {
-  border-left: 4px solid var(--accent);
+  border-left: 4px solid var(--primary-accent);
   padding: 0 0 0 20px;
   margin: 0px;
   font-size: 1.333em;
 }
 hr {
   border: none;
-  border-top: 1px solid rgb(var(--gray-light));
+  border-top: 1px solid var(--neutral-600);
 }
 @media (max-width: 720px) {
   body {
